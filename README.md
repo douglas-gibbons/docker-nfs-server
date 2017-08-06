@@ -1,17 +1,11 @@
 Docker NFS Server
 ================
 
+NFS server where all clients are set to read/write using the same user and group ID.  This saves the permission pains of various clients with different users.
+
+Obviously, consider the security implications of this.
+
 Usage
 ----
-```bash
-docker run -d --name nfs --privileged cpuguy83/nfs-server /path/to/share /path/to/share2 /path/to/shareN
-```
 
-```bash
-docker run -d --name nfs-client --privileged --link nfs:nfs cpuguy83/nfs-client /path/on/nfs/server:/path/on/client
-``` 
-
-More Info
-=========
-
-See https://container42.com/2014/03/29/docker-quicktip-4-remote-volumes/
+docker run --privileged dougg/docker-nfs-server /exports
