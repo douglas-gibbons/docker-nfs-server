@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 echo "# NFS Exports" > /etc/exports
 
@@ -10,11 +10,8 @@ echo "Serving /exports"
 
 cat /etc/exports
 
-. /etc/default/nfs-kernel-server
-. /etc/default/nfs-common
-
-
-/sbin/rpcbind
+# /usr/sbin/rpcinfo > /dev/null
+/sbin/rpcbind -w
 
 mount -t nfsd nfds /proc/fs/nfsd
 
@@ -23,11 +20,13 @@ mount -t nfsd nfds /proc/fs/nfsd
 
 /usr/sbin/exportfs -r
 # -G 10 to reduce grace time to 10 seconds (the lowest allowed)
-/usr/sbin/rpc.nfsd -- $RPCNFSDOPTS $RPCNFSDCOUNT
+/usr/sbin/rpc.nfsd -G 10 -N 2 -V 3
 /sbin/rpc.statd --no-notify
-echo "NFS started"
+
+echo "NFS Started"
 
 # Ugly hack to do nothing and wait for SIGTERM
 while true; do
     sleep 5
 done
+
