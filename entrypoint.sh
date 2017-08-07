@@ -1,18 +1,12 @@
-#!/bin/bash
-
-set -ex
-
-mounts="${@}"
+#!/bin/bash -e
 
 echo "# NFS Exports" > /etc/exports
 
-for mnt in "$@"; do
-  mkdir -p $mnt
-  echo "$mnt *(rw,fsid=0,insecure,all_squash,anonuid=1000,anongid=1000)" >> /etc/exports
-  chmod 770 $mnt
-  chown --recursive 1000:1000 $mnt 
-  echo "Serving $mnt"
-done
+mkdir -p /exports
+echo "/exports *(rw,fsid=0,insecure,no_subtree_check,all_squash,anonuid=1000,anongid=1000)" >> /etc/exports
+chmod 770 /exports
+chown --recursive 1000:1000 /exports 
+echo "Serving /exports"
 
 cat /etc/exports
 
